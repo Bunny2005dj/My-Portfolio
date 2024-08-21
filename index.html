@@ -1,33 +1,636 @@
-<!-- TODO 1: Create the HTML Boilerplate -->
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Code Display</title>
+    <style>
+        pre {
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        code {
+            display: block;
+            font-family: Consolas, 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <pre>
+        <a href="https://drive.google.com/file/d/1D4mLE4Dv5AgEF29Be2jc2Pj1-yIh-Ab3/view?usp=drive_link">pdf1</a>
+        <br>
+        <a href="https://drive.google.com/file/d/1N9L3pLRiznw5u-8_cMGlUNfZu9NaOqbm/view?usp=drive_link">pdf2</a>
+        <br>
+        <a href="https://drive.google.com/file/d/13bCLh7xuEv8vh9iiKFq4rjgH3SwPqLtp/view?usp=drive_link">pdf3</a>
+    </pre>
+    <pre>
+        Microsoft Word:
+
+Navigation:
+Ctrl + Home: Go to beginning of document
+Ctrl + End: Go to end of document
+Ctrl + Page Up/Page Down: Move to previous/next page
+Editing:
+Ctrl + A: Select all
+Ctrl + C: Copy
+Ctrl + X: Cut
+Ctrl + V: Paste
+Ctrl + Z: Undo
+Ctrl + Y: Redo
+Formatting:
+Ctrl + B: Bold
+Ctrl + I: Italic
+Ctrl + U: Underline
+Ctrl + Shift + >: Increase font size
+Ctrl + Shift + <: Decrease font size
+Alignment:
+Ctrl + L: Left align
+Ctrl + R: Right align
+Ctrl + E: Center align
+Ctrl + J: Justify
+Other:
+F1: Open Help
+F5: Refresh
+F7: Spell check
+Shift + F3: Change case (upper/lower)
+Microsoft Excel:
+
+Navigation:
+Ctrl + Home: Go to beginning of worksheet
+Ctrl + End: Go to end of worksheet
+Ctrl + Page Up/Page Down: Move to previous/next worksheet
+Editing:
+Ctrl + A: Select all
+Ctrl + C: Copy
+Ctrl + X: Cut
+Ctrl + V: Paste
+Ctrl + Z: Undo
+Ctrl + Y: Redo
+Formatting:
+Ctrl + B: Bold
+Ctrl + I: Italic
+Ctrl + U: Underline
+Ctrl + Shift + >: Increase font size
+Ctrl + Shift + <: Decrease font size
+Formulas:
+=: Enter a formula
+Ctrl + `: Toggle formula display
+F2: Edit cell
+F5: Refresh
+Other:
+Alt + =: AutoSum
+Ctrl + Shift + !: Format as a number
+Ctrl + Shift + $: Format as currency
+Ctrl + Shift + %: Format as percentage
+Microsoft PowerPoint:
+
+Navigation:
+Ctrl + Home: Go to beginning of presentation
+Ctrl + End: Go to end of presentation
+Ctrl + Page Up/Page Down: Move to previous/next slide
+Editing:
+Ctrl + A: Select all
+Ctrl + C: Copy
+Ctrl + X: Cut
+Ctrl + V: Paste
+Ctrl + Z: Undo
+Ctrl + Y: Redo
+Formatting:
+Ctrl + B: Bold
+Ctrl + I: Italic
+Ctrl + U: Underline
+Ctrl + Shift + >: Increase font size
+Ctrl + Shift + <: Decrease font size
+Slides:
+Ctrl + Shift + N: New slide
+Ctrl + Shift + D: Duplicate slide
+Ctrl + Shift + -: Delete slide
+Other:
+F5: Start slide show
+F7: Spell check
+Shift + F3: Change case (upper/lower)
+    </pre>
+    <h1>Given an array of string words and a width maxWidth</h1>
+    <pre><code>
+        import java.util.Scanner ;
+        import java.util.List ;
+        import java.util.ArrayList ;
         
-        <title>its my portfolio</title>
-    </head>
-    <body>
-        <h1>Akshith's Portfolio</h1>
-        <h2>Im a satyabamite</h2>
-        <hr>
-        <a href="./public/movie-ranking.html">Movie ranking project</a>
-        <img src="./assets/images/movie-ranking.png" height="200">
-        <a href="./public/birthday-invite.html">Birthday Invite project</a>
-        <img src="./assets/images/birthday-invite.png" height="200">
-        <hr>
-        <a href="./public/about.html">about me</a>
-        <a href="./public/contact.html">contact me</a>
-    </body>
-<!-- TODO 2: Add Your previous projects' HTML into the public folder -->
+        class Main {
+            public static List<String> fullJustify(String[] words, int maxWidth) {
+                List<String> res = new ArrayList<>();
+                int currSum = 0;    // Current sum of total characters.
+                List<String> currList = new ArrayList<>();
+                for(int i = 0; i < words.length; i++) {
+                    if(currSum + words[i].length() + currList.size() <= maxWidth) {
+                        currList.add(words[i]);
+                        currSum += words[i].length();
+                    } else {
+                        int n = currList.size();    // Number of words in this line.
+                        int numSpace = maxWidth - currSum;
+                        StringBuffer sb = new StringBuffer();
+                        if(n != 1) {
+                            int a = numSpace / (n - 1); // Basic number of spaces between words.
+                            int b = numSpace - a * (n - 1); // Number of slots which need extra one space.
+                            for(int j = 0; j < currList.size(); j++) {
+                                sb.append(currList.get(j));
+                                if(j < b) {
+                                    for(int k = 0; k < a + 1; k++)
+                                        sb.append(" ");
+                                } else if(j != currList.size() - 1) {
+                                    for(int k = 0; k < a; k++)
+                                        sb.append(" ");
+                                }
+                            }
+                        } else {
+                            sb.append(currList.get(0));
+                            while(sb.length() < maxWidth)
+                                sb.append(" ");
+                        }
+                        res.add(sb.toString());
+                        currList = new ArrayList<>();
+                        currList.add(words[i]);
+                        currSum = words[i].length();
+                    }
+                }
+                // For last line.
+                if(currList.size() != 0) {
+                    StringBuffer sb = new StringBuffer();
+                    for(int i = 0; i < currList.size(); i++) {
+                        sb.append(currList.get(i));
+                        if(i != currList.size() - 1)
+                            sb.append(" ");
+                    }
+                    while(sb.length() < maxWidth)
+                        sb.append(" ");
+                    res.add(sb.toString());
+                }
+                return res;
+            }
+            public static void main(String a[]) {
+                Scanner sc = new Scanner(System.in) ;
+                int n = sc.nextInt() ;
+                String words[] = new String[n] ;
+                for(int i = 0 ; i < n ; i++)
+                    words[i] = sc.next() ;
+                int maxWidth = sc.nextInt() ;
+                System.out.print( fullJustify(words, maxWidth).toString() ) ;
+            }
+        }    
+    </code></pre>
+    <h1>You have been given three arrays A, B, and C in sorted forma</h1>
+    <pre><code>
+        import sys
+ 
+        def findMinRange(a, b, c):
+         
+          
+            pair = ()
+         
+           
+            diff = sys.maxsize
+         
+           
+            for i in range(len(a)):
+                for j in range(len(b)):
+                    for k in range(len(c)):
+                       
+                        low = min(min(a[i], b[j]), c[k])
+                        high = max(max(a[i], b[j]), c[k])
+         
+                       
+                        if diff > high - low:
+                            pair = (low, high)
+                            diff = high - low
+         
+            return pair
+         
+         
+        if __name__ == '__main__':
+         
+            a=[]
+            n=int(input())
+            for x in range(0,n):
+                ele=int(input())
+                a.append(ele)
+        
+            b=[]
+            n=int(input())
+            for x in range(0,n):
+                ele=int(input())
+                b.append(ele)
+        
+            c=[]
+            n=int(input())
+            for x in range(0,n):
+                ele=int(input())
+                c.append(ele)
+        
+         
+            pair = findMinRange(a, b, c)
+            print(pair)    
+        </code></pre>
+        <h1>Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the combined sorted array.</h1>
+        <pre><code>
+            # You are using Python
+            def fmosa(m, nums1, n, nums2):
+                merged = []
+                i, j = 0, 0
+                while i &lt; m and j &lt; n:
+                    if nums1[i] &lt; nums2[j]:
+                        merged.append(nums1[i])
+                        i += 1
+                    else:
+                        merged.append(nums2[j])
+                        j += 1
+                merged.extend(nums1[i:])
+                merged.extend(nums2[j:])
+                total_len = len(merged)
+                if total_len % 2 == 1:
+                    return round(merged[total_len // 2], 1)
+                else:
+                    mid1, mid2 = total_len // 2 - 1, total_len // 2
+                    return round((merged[mid1] + merged[mid2]) / 2.0, 1)
+            
+            m = int(input().strip())
+            nums1 = list(map(int, input().strip().split()))
+            n = int(input().strip())
+            nums2 = list(map(int, input().strip().split()))
+            median = fmosa(m, nums1, n, nums2)
+            print(f"{median:.1f}")
+                </code></pre>
+                <pre><code>
+        import sys
+ 
+        def findMinRange(a, b, c):
+         
+          
+            pair = ()
+         
+           
+            diff = sys.maxsize
+         
+           
+            for i in range(len(a)):
+                for j in range(len(b)):
+                    for k in range(len(c)):
+                       
+                        low = min(min(a[i], b[j]), c[k])
+                        high = max(max(a[i], b[j]), c[k])
+         
+                       
+                        if diff > high - low:
+                            pair = (low, high)
+                            diff = high - low
+         
+            return pair
+         
+         
+        if __name__ == '__main__':
+         
+            a=[]
+            n=int(input())
+            for x in range(0,n):
+                ele=int(input())
+                a.append(ele)
+        
+            b=[]
+            n=int(input())
+            for x in range(0,n):
+                ele=int(input())
+                b.append(ele)
+        
+            c=[]
+            n=int(input())
+            for x in range(0,n):
+                ele=int(input())
+                c.append(ele)
+        
+         
+            pair = findMinRange(a, b, c)
+            print(pair)    
+        </code></pre>
+        <h1>Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the combined sorted array.</h1>
+        <pre><code>
+            # You are using Python
+            def fmosa(m, nums1, n, nums2):
+                merged = []
+                i, j = 0, 0
+                while i &lt; m and j &lt; n:
+                    if nums1[i] &lt; nums2[j]:
+                        merged.append(nums1[i])
+                        i += 1
+                    else:
+                        merged.append(nums2[j])
+                        j += 1
+                merged.extend(nums1[i:])
+                merged.extend(nums2[j:])
+                total_len = len(merged)
+                if total_len % 2 == 1:
+                    return round(merged[total_len // 2], 1)
+                else:
+                    mid1, mid2 = total_len // 2 - 1, total_len // 2
+                    return round((merged[mid1] + merged[mid2]) / 2.0, 1)
+            
+            m = int(input().strip())
+            nums1 = list(map(int, input().strip().split()))
+            n = int(input().strip())
+            nums2 = list(map(int, input().strip().split()))
+            median = fmosa(m, nums1, n, nums2)
+            print(f"{median:.1f}")
+                </code></pre>
+                <h1>Given a number, find its corresponding Roman numeral. </h1>
+                <code><pre>
+                    // You are using Java
+                    import java.util.*;
+                    class Roman{
+                        public static String intoToRoman(int num)
+                        {
+                            String roman="";
+                            int[] values={1000,900,500,400,100,90,50,40,10,9,5,4,1};
+                            String[] romanletter={
+                                "M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+                            for(int i=0;i<values.length;i++)
+                            {
+                                while(num>=values[i])
+                                {
+                                    roman=roman+romanletter[i];
+                                    num=num-values[i];
+                                }
+                            }
+                            return roman;
+                        }
+                        public static void main(String args[])
+                        {
+                            Scanner scanner=new Scanner(System.in);
+                            int num=scanner.nextInt();
+                            System.out.println("Roman Numeral of Integer is:"+intoToRoman(num));
+                        }
+                    }
+                </code></pre>
+                <h1>number of occurences of digit 3</h1>
+                <code><pre>
+                    u = int(input())
+                    a = int(input())
+                    
+                    c = 0
+                    
+                    for i in range(1, u + 1):
+                        n = i
+                        while n > 0:
+                            t = n % 10
+                            if t == a:
+                                c += 1
+                            n = n // 10
+                    
+                    print(c)
+                
+                </code></pre>
+                <h1>convert into corresponding excel</h1>
+                <code><pre>
+                    def inte(m):
+                    c = ""
+                    while m > 0:
+                        m -= 1
+                        c = chr(m % 26 + 65) + c
+                        m //= 26
+                    return c
+                
+                n = int(input())
+                print(inte(n))
+                
+                </code></pre>
+                <h1>Maximum possible difference between two subsets of the array</h1>
+                <code><pre>
+                    def is_match(pattern, text):
+    if not pattern:
+        return not text
+    if pattern[0] == '*':
+        # '*' can match zero characters (move pattern forward) or one character (move text forward)
+        return is_match(pattern[1:], text) or (text and is_match(pattern, text[1:]))
+    if pattern[0] == '?' or (text and pattern[0] == text[0]):
+        # '?' matches one character or exact match of characters
+        return is_match(pattern[1:], text[1:])
+    return False
 
-<!-- TODO 3: Take screenshots of your project previews and add the images to the images folder -->
+pattern = input().strip()
+text = input().strip()
 
-<!-- TODO 4: Add titles/subtitles etc. -->
+print(f"Second string: {text}")
+if is_match(pattern, text):
+    print("The strings match")
+else:
+    print("The strings do not match")
 
-<!-- TODO 5: Add a link to the project pages -->
+                </code></pre>
+    <code><pre>
+        def computeLPSArray(pat):
+    M = len(pat)
+    lps = [0] * M
+    
+    # Length of the previous longest prefix suffix
+    length = 0  
+    i = 1
 
-<!-- TODO 6: Add images to show the project previews
-HINT for TODO 6: You can use the height attribute set to 200 to make the image smaller:
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-height -->
+    # Loop calculates lps[i] for i = 1 to M-1
+    while i < M:
+        if pat[i] == pat[length]:
+            length += 1
+            lps[i] = length
+            i += 1
+        else:
+            if length != 0:
+                length = lps[length - 1]
+            else:
+                lps[i] = 0
+                i += 1
+    return lps
 
-<!-- TODO 7: Add the Contact Me and About Me page links -->
+
+def KMPSearch(pat, txt):
+    M = len(pat)
+    N = len(txt)
+
+    # Create lps[] that will hold the longest prefix
+    # suffix values for pattern
+    lps = computeLPSArray(pat)
+    result = []
+
+    i = 0  # index for txt
+    j = 0  # index for pat
+    while (N - i) >= (M - j):
+        if pat[j] == txt[i]:
+            j += 1
+            i += 1
+
+        if j == M:
+            result.append(i - j + 1)
+            j = lps[j - 1]
+        elif i < N and pat[j] != txt[i]:
+            if j != 0:
+                j = lps[j - 1]
+            else:
+                i += 1
+    return result
+
+
+# Driver code
+txt = "geeksforgeeks"
+pat = "geeks"
+result = KMPSearch(pat, txt)
+
+# Print all the occurrences (1-based indices)
+for index in result:
+    print(index, end=' ')
+    </code></pre>
+    <code><pre>
+        import java.util.*;
+
+public class WildcardMatching {
+
+    public static boolean solution(String str, String pattern){
+        boolean[][] dp = new boolean[pattern.length()+1][str.length()+1];
+
+        for(int i = dp.length - 1; i >= 0; i--){
+            for(int j = dp[0].length-1; j>=0; j--){
+                if(i == dp.length-1 && j == dp[0].length-1){
+                    dp[i][j] = true;
+                }else if(i == dp.length-1) {
+                    dp[i][j] = false;
+                }else if(j == dp[0].length-1){
+                    if(pattern.charAt(i) == '*'){
+                        dp[i][j] = dp[i+1][j];
+                    }else{
+                        dp[i][j] = false;
+                    }
+                }else{
+                    if(pattern.charAt(i) == '?'){
+                        dp[i][j] = dp[i+1][j+1];
+                    }
+                    else if(pattern.charAt(i) == '*'){
+                        dp[i][j] = dp[i+1][j] || dp[i][j+1];
+                    }
+                    else if(pattern.charAt(i) == str.charAt(j)){
+                        dp[i][j] = dp[i+1][j+1];
+                    }else{
+                        dp[i][j] = false;
+                }
+            }
+        }  
+    }
+    return dp[0][0];
+}
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        String p = scan.nextLine();
+        String s = scan.nextLine();
+        System.out.println(solution(s, p));
+    }
+
+}
+    </code></pre>
+        <h1>max difference</h1>
+        <code><pre>
+            def calculate_max_difference(arr):
+    sum_subset_a = 0  # Sum of positive elements (Subset A)
+    sum_subset_b = 0  # Sum of negative elements (Subset B)
+
+    # Separate elements into Subset A and Subset B
+    for num in arr:
+        if num >= 0:
+            sum_subset_a += num
+        else:
+            sum_subset_b += num
+    
+    # Calculate the maximum difference
+    max_difference = sum_subset_a - sum_subset_b
+    
+    return max_difference
+
+def main():
+    # Driver code to get input from the user
+    n = int(input("Enter the size of the array: "))
+    
+    # Converting input string into a list of integers
+    arr = list(map(int, input("Enter the array elements separated by spaces: ").split()))
+    
+    # Calculate the maximum difference
+    max_difference = calculate_max_difference(arr)
+    
+    # Output the result
+    print("Maximum Difference =", max_difference)
+
+if _name_ == "_main_":
+    main()
+        </code></pre>
+            <code><pre>
+                def minDistance(word1: str, word2: str) -> int:
+    m, n = len(word1), len(word2)
+    
+    # Create a 2D DP table
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    
+    # Initialize the base cases
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+    
+    # Fill the DP table
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if word1[i - 1] == word2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = 1 + min(dp[i - 1][j],    # Delete
+                                   dp[i][j - 1],    # Insert
+                                   dp[i - 1][j - 1] # Replace
+                                  )
+    
+    return dp[m][n]
+
+# Driver code to get user input
+if _name_ == "_main_":
+    word1 = input("Enter the first word: ")
+    word2 = input("Enter the second word: ")
+    
+    result = minDistance(word1, word2)
+    print(f"The minimum number of operations required: {result}")
+            </pre></code>
+            <code><pre>
+                def max_profit(prices):
+    n = len(prices)
+    if n < 2:
+        return 0  # No profit can be made with less than 2 prices
+
+    max_profit = 0
+
+    # Traverse through the array
+    for i in range(1, n):
+        # If the price is higher than the previous day, add the difference to the profit
+        if prices[i] > prices[i - 1]:
+            max_profit += prices[i] - prices[i - 1]
+
+    return max_profit
+
+# Taking input from the user
+size = int(input("Enter the size of the array: "))
+prices = []
+
+print("Enter the prices: ")
+for i in range(size):
+    price = int(input(f"Price on day {i}: "))
+    prices.append(price)
+
+# Calculate the maximum profit
+profit = max_profit(prices)
+print("Maximum profit:", profit)
+            </pre></code>
+            
+        
+
+</body>
+</html>
